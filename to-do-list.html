@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kunal To Do List</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-image: linear-gradient(
+          135deg,
+          rgb(207, 30, 30),
+          rgba(48, 43, 193, 0.5),
+          rgb(110, 110, 11),
+          rgb(150, 102, 13)
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      #title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        border: 4px solid #ffeb3b;
+        border-radius: 16px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        padding: 15px 30px;
+        font-size: 28px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      #subtitle h3 {
+        color: #fff;
+        font-size: 18px;
+        margin-bottom: 20px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 10px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #task {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .input-group {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+      }
+
+      input {
+        padding: 12px 15px;
+        flex-grow: 1;
+        border-radius: 8px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        outline: none;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      input:focus {
+        border-color: #ffeb3b;
+        box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+      }
+
+      button {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        background-color: #ffeb3b;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover {
+        background-color: #ffc107;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      ul {
+        list-style: none;
+        width: 100%;
+        padding: 0;
+        margin-top: 20px;
+      }
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      li:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateX(5px);
+      }
+
+      .task-text {
+        flex-grow: 1;
+        margin-right: 10px;
+        word-break: break-word;
+      }
+
+      .delete-btn {
+        background-color: #ff5252;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      .delete-btn:hover {
+        background-color: #ff1744;
+      }
+
+      .task-complete {
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+      }
+
+      .task-count {
+        color: white;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+        
+        .input-group {
+          flex-direction: column;
+        }
+        
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="title">
+        <h1>Kunal To Do List</h1>
+      </div>
+      <div id="subtitle">
+        <h3>Add Your Day To Day Task</h3>
+      </div>
+      <div id="task">
+        <div class="input-group">
+          <input type="text" id="takeinput" placeholder="Add your task..." />
+          <button onclick="addTask()">Add Task</button>
+        </div>
+        <ul id="tasklist"></ul>
+        <div class="task-count" id="taskCount">0 tasks</div>
+        <div class="buttons">
+          <button onclick="clearCompleted()">Clear Completed</button>
+          <button onclick="clearAll()">Clear All</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Load tasks from localStorage when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        loadTasks();
+        updateTaskCount();
+      });
+
+      // Add task function
+      function addTask() {
+        const input = document.getElementById('takeinput');
+        const taskText = input.value.trim();
+        
+        if (taskText === '') {
+          alert('Please enter a task!');
+          return;
+        }
+        
+        const taskList = document.getElementById('tasklist');
+        
+        // Create list item
+        const li = document.createElement('li');
+        
+        // Create task text span
+        const taskSpan = document.createElement('span');
+        taskSpan.className = 'task-text';
+        taskSpan.textContent = taskText;
+        
+        // Create delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = function() {
+          li.remove();
+          saveTasks();
+          updateTaskCount();
+        };
+        
+        // Add click event to mark task as complete
+        taskSpan.onclick = function() {
+          taskSpan.classList.toggle('task-complete');
+          saveTasks();
+          updateTaskCount();
+        };
+        
+        // Append elements to list item
+        li.appendChild(taskSpan);
+        li.appendChild(deleteBtn);
+        
+        // Add to task list
+        taskList.appendChild(li);
+        
+        // Clear input
+        input.value = '';
+        
+        // Save tasks to localStorage
+        saveTasks();
+        
+        // Update task count
+        updateTaskCount();
+      }
+      
+      // Clear completed tasks
+      function clearCompleted() {
+        const completedTasks = document.querySelectorAll('.task-complete');
+        completedTasks.forEach(task => {
+          task.closest('li').remove();
+        });
+        saveTasks();
+        updateTaskCount();
+      }
+      
+      // Clear all tasks
+      function clearAll() {
+        if (confirm('Are you sure you want to delete all tasks?')) {
+          document.getElementById('tasklist').innerHTML = '';
+          saveTasks();
+          updateTaskCount();
+        }
+      }
+      
+      // Save tasks to localStorage
+      function saveTasks() {
+        const tasks = [];
+        document.querySelectorAll('#tasklist li').forEach(li => {
+          tasks.push({
+            text: li.querySelector('.task-text').textContent,
+            completed: li.querySelector('.task-text').classList.contains('task-complete')
+          });
+        });
+        localStorage.setItem('todoTasks', JSON.stringify(tasks));
+      }
+      
+      // Load tasks from localStorage
+      function loadTasks() {
+        const savedTasks = localStorage.getItem('todoTasks');
+        if (savedTasks) {
+          const tasks = JSON.parse(savedTasks);
+          tasks.forEach(task => {
+            const taskList = document.getElementById('tasklist');
+            const li = document.createElement('li');
+            
+            const taskSpan = document.createElement('span');
+            taskSpan.className = 'task-text';
+            taskSpan.textContent = task.text;
+            if (task.completed) {
+              taskSpan.classList.add('task-complete');
+            }
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.onclick = function() {
+              li.remove();
+              saveTasks();
+              updateTaskCount();
+            };
+            
+            taskSpan.onclick = function() {
+              taskSpan.classList.toggle('task-complete');
+              saveTasks();
+              updateTaskCount();
+            };
+            
+            li.appendChild(taskSpan);
+            li.appendChild(deleteBtn);
+            taskList.appendChild(li);
+          });
+        }
+      }
+      
+      // Update task counter
+      function updateTaskCount() {
+        const totalTasks = document.querySelectorAll('#tasklist li').length;
+        const completedTasks = document.querySelectorAll('#tasklist .task-complete').length;
+        const taskCount = document.getElementById('taskCount');
+        
+        if (totalTasks === 0) {
+          taskCount.textContent = 'No tasks';
+        } else if (completedTasks === totalTasks && totalTasks > 0) {
+          taskCount.textContent = `All ${totalTasks} tasks completed!`;
+        } else {
+          taskCount.textContent = `${completedTasks} of ${totalTasks} tasks completed`;
+        }
+      }
+      
+      // Add task when Enter key is pressed
+      document.getElementById('takeinput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addTask();
+        }
+      });
+    </script>
+  </body>
+</html>
